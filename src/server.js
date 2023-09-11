@@ -1,5 +1,8 @@
+import "dotenv/config";
 import express from "express";
 import connectData from "./config/dbConnect.js";
+import livros from "./models/Livros.js";
+
 
 const connect = await connectData();
 
@@ -16,16 +19,6 @@ const port = 8080;
 const app = express();
 app.use(express.json());
 
-const livros = [
-    {
-        id: 1,
-        título: "O Senhor dos Anéis"
-    },
-    {
-        id: 2,
-        título: "O Hobbit"
-    }
-];
 
 function searchLivro (id) {
     return livros.findIndex(livros => {
@@ -37,8 +30,10 @@ app.get('/', (req, res) => {
     res.send({'mensage': 'ola'})
 });
 
-app.get('/livros', (req, res) => {
-    res.status(200).json(livros);
+app.get('/livros', async (req, res) => {
+    const listLivro = await livros.find()
+
+    res.status(200).json(listLivro);
 });
 
 app.get("/livros/:id", (req, res) => {
